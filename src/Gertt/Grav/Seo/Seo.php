@@ -17,6 +17,10 @@ class Seo extends Plugin
 	    if ($this->config->get('plugins.seo.meta.optimize')) {
 			$this->grav['events']->addSubscriber(new Metadata\Facebook($this->grav, $this->config));
 	    }
+
+	    if ($this->config->get('plugins.seo.analytics.insights.enabled')) {
+			$this->grav['events']->addSubscriber(new Analytics\FacebookInsights($this->grav, $this->config));
+	    }
 	}
 }
 
