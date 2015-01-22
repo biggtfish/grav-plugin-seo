@@ -1,0 +1,17 @@
+{
+    "name": "gertt/grav-plugin-seo",
+    "description": "SEO plugin for Grav CMS",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gert",
+            "email": "gert@gert.gert"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Gertt\\Grav\\Seo\\": "src/Gertt/Grav/Seo/"
+        }
+    }
+}
