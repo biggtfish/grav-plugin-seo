@@ -1,3 +1,8 @@
 enabled: true
 meta:
   optimize: true
+analytics:
+  insights:
+    enabled: true
+    type: app
+    id: 23432432423423
