@@ -1,16 +1,12 @@
 <?php
 namespace Grav\Plugin;
 
-use Grav\Common\Page\Collection;
 use Grav\Common\Plugin;
-use Grav\Common\Uri;
-use Grav\Common\Taxonomy;
+use Gertt\Grav\Seo\Seo;
 
 class SeoPlugin extends Plugin
 {
-	protected $optimize = [
-		'metadata' => false
-	];
+	protected $seo = null;
 
 	public static function getSubscribedEvents() {
 		return [
@@ -20,31 +16,25 @@ class SeoPlugin extends Plugin
 
 	public function onPluginsInitialized()
 	{
-	    $this->optimize['metadata'] = $this->config->get('plugins.seo.meta.optimize');
+		$autoload = __DIR__ . '/vendor/autoload.php';
+		
+		if (!is_file($autoload)) {
+			$this->grav['logger']->error('SEO Plugin failed to load. Composer dependencies not met.');
+		}
 
-	    if ($this->optimize['metadata']) {
-	        $this->enable([
-	            'onPageInitialized' => ['onPageInitialized', 0]
-	        ]);
-	    }
+		require_once $autoload;
+
+		$this->seo = new Seo($this, $this->grav);
+
+		$hooks = $this->seo->getHooks();
+
+		if ( ! empty($hooks) )
+			$this->enable($hooks);
 	}
 
 	public function onPageInitialized()
 	{
-		$available = [
-			'page' => (array) $this->grav['page']->header(),
-			'site' => $this->config->get('site')
-		];
-
-		$metadata = $this->grav['page']->metadata();
-
-		if (empty($metadata['og:title']))
-			$metadata['og:title'] = [ 'property' => 'og:title', 'content' => empty($available['page']['title']) ? $available['site']['title'] : $available['page']['title'] ];
-
-		if (empty($metadata['og:description']))
-			$metadata['og:description'] = [ 'property' => 'og:description', 'content' => $available['page']['metadata']['description'] ];
-
-		$metadata = $this->grav['page']->metadata($metadata);
+		$this->seo->onPageInitialized();
 	}
 
 }
