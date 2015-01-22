@@ -6,8 +6,6 @@ use Gertt\Grav\Seo\Seo;
 
 class SeoPlugin extends Plugin
 {
-	protected $seo = null;
-
 	public static function getSubscribedEvents() {
 		return [
 			'onPluginsInitialized' => ['onPluginsInitialized', 0],
@@ -24,17 +22,7 @@ class SeoPlugin extends Plugin
 
 		require_once $autoload;
 
-		$this->seo = new Seo($this, $this->grav);
-
-		$hooks = $this->seo->getHooks();
-
-		if ( ! empty($hooks) )
-			$this->enable($hooks);
+		$seo = new Seo($this->grav, $this->config);
+		$seo->init();
 	}
-
-	public function onPageInitialized()
-	{
-		$this->seo->onPageInitialized();
-	}
-
 }
